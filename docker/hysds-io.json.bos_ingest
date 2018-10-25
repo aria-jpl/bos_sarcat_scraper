@@ -1,0 +1,29 @@
+{
+  "submission_type": "individual",
+  "component":"tosca",
+  "label": "Ingest acquisitions from Bos SARCAT",
+  "allowed_accounts": [ "ops" ],
+  "params" : [
+    {
+      "name": "bos_ingest_time",
+      "from": "submitter",
+      "type": "text",
+      "optional": true,
+      "placeholder":"start of bos_ingest_timestamp in format yyyy-mm-ddThh:mm:ss.sssZ"
+    },
+    {
+      "name": "from_time",
+      "from": "submitter",
+      "type": "text",
+      "optional": true,
+      "placeholder":"start of acquisition time in format yyyy-mm-ddThh:mm:ss.sssZ"
+    },
+    {
+      "name": "end_time",
+      "from": "submitter",
+      "type": "text",
+      "optional": true,
+      "placeholder":"end of acquisition time in format yyyy-mm-ddThh:mm:ss.sssZ"
+    }
+ ]
+}

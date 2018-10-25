@@ -1,0 +1,7 @@
+{
+  "submission_type": "individual",
+  "component":"tosca",
+  "label": "Scrub outdated planned and predicted acquisitions from Bos SARCAT",
+  "allowed_accounts": [ "ops" ],
+  "params" : [ ]
+}

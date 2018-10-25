@@ -1,0 +1,19 @@
+{
+  "required_queues":["factotum-job_worker-small"],
+  "command":"/home/ops/verdi/ops/bos_sarcat_scrapper/create_acquisitions.sh",
+  "disk_usage":"1GB",
+  "params" : [
+    {
+      "name": "bos_ingest_time",
+      "destination": "context"
+    },
+    {
+      "name": "from_time",
+      "destination": "context"
+    },
+    {
+      "name": "end_time",
+      "destination": "context"
+    }
+  ]
+}
