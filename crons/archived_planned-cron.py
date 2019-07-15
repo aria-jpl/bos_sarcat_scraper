@@ -1,4 +1,5 @@
 import logging
+import datetime
 from hysds_commons.job_utils import submit_mozart_job
 import json
 
@@ -7,6 +8,10 @@ LOGGER = logging.getLogger("hysds")
 
 CRAWLER_QUEUE = "factotum-job_worker-small"
 
+
+def get_from_ingest_time():
+    time = "{}Z".format((datetime.datetime.utcnow() - datetime.timedelta(days=2)).isoformat())
+    return time
 
 def submit_scrapper_job(params):
     rule = {
@@ -19,8 +24,8 @@ def submit_scrapper_job(params):
     print('submitting jobs with param-s:')
     print(json.dumps(params, sort_keys=True, indent=4, separators=(',', ': ')))
     mozart_job_id = submit_mozart_job({}, rule, hysdsio={"id": "internal-temporary-wiring", "params": params,
-                                                         "job-specification": "job-bos_ingest:master"},
-                                      job_name='job_%s-%s' % ('bos_scrapper', "master"),
+                                                         "job-specification": "job-acquisition_ingest-bos:master"},
+                                      job_name='job-%s-%s' % ("acquisition_ingest-bos", "master"),
                                       enable_dedup=False)
 
     LOGGER.info("Job ID: " + mozart_job_id)
@@ -33,7 +38,7 @@ def construct_params():
         {
             "name": "bos_ingest_time",
             "from": "value",
-            "value": ""
+            "value": get_from_ingest_time()
         },
         {
             "name": "end_time",
@@ -46,7 +51,7 @@ def construct_params():
             "value": ""
         }
         ]
-    print json.dumps(params)
+    print(json.dumps(params))
     return params
 
 

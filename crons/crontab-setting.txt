@@ -1,0 +1,5 @@
+# copy the cron scripts under bos_sarcat_scrapper/crons to /home/ops
+# BOS SarCat Scrapper
+0 * * * * /home/ops/verdi/bin/python /home/ops/archived_planned-cron.py > /home/ops/verdi/log/archived_planned-cron.log 2>&1
+# purge past predicted and planned BOS acquisitions
+0 0 * * * /home/ops/verdi/bin/python /home/ops/verdi/ops/bos_sarcat_scraper/scrub_planned_predicted-cron.py > /home/ops/verdi/purge_past_planned_predicted-cron.log 2>&1
