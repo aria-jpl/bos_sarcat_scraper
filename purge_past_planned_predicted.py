@@ -50,7 +50,10 @@ def delete_document_by_id(index, typ, acq_id):
     :param acq_id:
     :return:
     """
-    ES.delete(index=index, doc_type="acquisition-SARCAT", id=acq_id)
+    try:
+        ES.delete(index=index, doc_type="acquisition-BOS_SARCAT", id=acq_id)
+    except:
+        raise Exception("Failed to delete document {} from index {}".format(acq_id, index))
 
 
 def query_ES_acqs_to_delete(query, es_index):
