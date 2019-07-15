@@ -35,10 +35,10 @@ def get_index_and_type():
         ipath = dataset[0].get("ipath")
         typ = ipath[ipath.rfind("/"):]
         version = dataset[0].get("version")
-        index = "grq_v{}_acquisition-sarcat".format(version)
+        index = "grq_v{}_acquisition-bos_sarcat".format(version)
     except:
-        index = "grq_{}_acquisition-sarcat".format("v0.2")
-        typ = "acquisition-SARCAT"
+        index = "grq_{}_acquisition-bos_sarcat".format("v0.2")
+        typ = "acquisition-BOS_SARCAT"
     return index, typ
 
 
@@ -51,7 +51,7 @@ def delete_document_by_id(index, typ, acq_id):
     :return:
     """
     try:
-        ES.delete(index=index, doc_type="acquisition-BOS_SARCAT", id=acq_id)
+        ES.delete(index=index, doc_type=typ, id=acq_id)
     except:
         raise Exception("Failed to delete document {} from index {}".format(acq_id, index))
 
