@@ -1,22 +1,23 @@
-# BOS SarCat Scrapper
+# BOS SARcat Scraper
 ## Purpose
-#### This is a command line tool to get all acquisitions from BOS SarCat.
+#### This is a command line tool to get all acquisitions from BOS SARcat.
 ## Installation
 1. Clone the git repository
-> git clone https://github.jpl.nasa.gov/aria-hysds/bos_sarcat_scrapper.git
+> https://github.com/aria-jpl/bos_sarcat_scraper.git
 2. Go into the project directory
-> cd bos_sarcat_scrapper
+> cd bos_sarcat_scraper
 3. Install the bos_sarca_scrapper
 > pip install -e .
 ### Requirements
 Python dependencies:
 - shapely
 - geojson
+- requests
 ##### These packages should be automatically installed if you don't already have them.
 ## Usage
-You can use `bos_sarcat_scrapper` on the command line to call the BOS SarCat API
+You can use `bos_sarcat_scraper` on the command line to call the BOS SARcat API
 ```
-$ bos_sarcat_scrapper -h
+$ bos_sarcat_scraper -h
 usage: bos_sarcat_scrapper [-h] [-from FROMTIME]
                            [--fromBosIngestTime FROMBOSINGESTTIME]
                            [-to TOTIME] [--spatialExtent SPATIALEXTENT]
