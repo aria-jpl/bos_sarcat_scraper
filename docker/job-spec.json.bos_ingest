@@ -1,9 +1,12 @@
 {
-  "required_queues":["factotum-job_worker-small"],
+  "required_queues": ["factotum-job_worker-small"],
   "container": "container-aria-jpl_bos_sarcat_scraper:master",
-  "command":"/home/ops/verdi/ops/bos_sarcat_scraper/create_acquisitions.sh",
-  "disk_usage":"1GB",
-  "params" : [
+  "command": "/home/ops/verdi/ops/bos_sarcat_scraper/create_acquisitions.sh",
+  "imported_worker_files": {
+    "/home/ops/verdi/etc/datasets.json": "/home/ops/verdi/etc/datasets.json"
+  },
+  "disk_usage": "1GB",
+  "params": [
     {
       "name": "bos_ingest_time",
       "destination": "context"
