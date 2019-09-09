@@ -18,7 +18,7 @@ Python dependencies:
 You can use `bos_sarcat_scraper` on the command line to call the BOS SARcat API
 ```
 $ bos_sarcat_scraper -h
-usage: bos_sarcat_scrapper [-h] [-from FROMTIME]
+usage: bos_sarcat_scraper [-h] [-from FROMTIME]
                            [--fromBosIngestTime FROMBOSINGESTTIME]
                            [-to TOTIME] [--spatialExtent SPATIALEXTENT]
                            [--sortBy SORTBY] [--sort SORT]

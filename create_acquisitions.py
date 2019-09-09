@@ -848,7 +848,7 @@ def main():
         bos_ingest_last = None # ingestion time from BOS
         from_time = None # start time
         end_time = None # end time
-        get_cmd = "bos_sarcat_scrapper"
+        get_cmd = "bos_sarcat_scraper"
 
         # start and end times to find existing acquisitions in ES
         starttime = None
