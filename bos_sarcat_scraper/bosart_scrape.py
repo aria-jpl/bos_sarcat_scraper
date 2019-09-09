@@ -73,7 +73,9 @@ def make_api_call(parameters):
     else:
         url = geo_server_url
 
-    print ("making request with url : %s"%url)
+    print("making request with url : %s" % url)
+    LOGGER.info("making request with url : %s" % url)
+
 
     r = requests.get(url)
     if r.status_code == requests.codes.ok:

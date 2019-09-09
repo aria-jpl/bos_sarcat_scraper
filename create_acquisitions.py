@@ -893,6 +893,8 @@ def main():
         # filter out the JSON response from other log messages in output
         start_pos = output.find("{")
         end_pos = output.rfind("}")
+        print(output)
+        LOGGER.info(output)
         results = json.loads(output[start_pos:end_pos+1])
 
         """

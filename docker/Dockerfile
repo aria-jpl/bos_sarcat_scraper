@@ -1,17 +1,17 @@
 FROM hysds/pge-base:python2
 
 MAINTAINER malarout "namrata.malarout@jpl.nasa.gov"
-LABEL description="Bos SARCat Acquisitions Scrapper"
+LABEL description="Bos SARCat Acquisitions Scraper"
 
 USER ops
 
 # copy packages
-COPY . /home/ops/verdi/ops/bos_sarcat_scrapper
+COPY . /home/ops/verdi/ops/bos_sarcat_scraper
 RUN set -ex \
  && source /home/ops/verdi/bin/activate \
- && sudo chown -R ops:ops /home/ops/verdi/ops/bos_sarcat_scrapper
+ && sudo chown -R ops:ops /home/ops/verdi/ops/bos_sarcat_scraper
 
-RUN cd /home/ops/verdi/ops/bos_sarcat_scrapper \
+RUN cd /home/ops/verdi/ops/bos_sarcat_scraper \
  && sudo pip install -e . \
  && sudo pip install elasticsearch
 
