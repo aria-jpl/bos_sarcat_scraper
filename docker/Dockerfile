@@ -13,6 +13,7 @@ RUN set -ex \
 
 RUN cd /home/ops/verdi/ops/bos_sarcat_scrapper \
  && sudo pip install -e .
+ && sudo pip install elasticsearch
 
 WORKDIR /home/ops
 CMD ["/bin/bash", "--login"]
