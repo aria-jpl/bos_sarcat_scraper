@@ -160,8 +160,8 @@ def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets
                         LOGGER.info("Successfully ingested dataset {}".format(id))
                         shutil.rmtree(id)
                     except Exception as e:
-                        LOGGER.info("Exception: {}".format(e))
-                        LOGGER.info("Failed to ingest dataset {}".format(id))
+                        LOGGER.error("Exception: {}".format(e))
+                        LOGGER.error("Failed to ingest dataset {}".format(id))
                         failed_publish.append(id)
     return
 
@@ -707,7 +707,7 @@ def make_met_file(product_name, record):
         met_file.write(json.dumps(metadata))
         met_file.close()
     except Exception as ex:
-        LOGGER.info("Failed to create dataset for {}. Because {}. {}".format(folder_name, ex.message, traceback.format_exc()))
+        LOGGER.error("Failed to create dataset for {}. Because {}. {}".format(folder_name, ex.message, traceback.format_exc()))
 
     return folder_name
 
@@ -792,7 +792,7 @@ def make_predicted_datasets(record):
                 try:
                     shutil.rmtree(folder_name)
                 except Exception as ex:
-                    LOGGER.info("Failed to delete dataset for {}. Because {}. {}".format(folder_name, ex.message,
+                    LOGGER.error("Failed to delete dataset for {}. Because {}. {}".format(folder_name, ex.message,
                                                                                    traceback.format_exc()))
             else:
                 LOGGER.info("Keeping existing dataset. Expect to see exception message.")
@@ -805,7 +805,7 @@ def make_predicted_datasets(record):
             met_file.close()
             make_dataset_file(dataset_name, record, metadata["sensingStart"], metadata["sensingStop"])
         except Exception as ex:
-            LOGGER.info("Failed to create dataset for {}. Because {}. {}".format(folder_name, ex.message,
+            LOGGER.error("Failed to create dataset for {}. Because {}. {}".format(folder_name, ex.message,
                                                                                  traceback.format_exc()))
 
 

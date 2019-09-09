@@ -1,4 +1,4 @@
-FROM hysds/pge-base
+FROM hysds/pge-base:python2
 
 MAINTAINER malarout "namrata.malarout@jpl.nasa.gov"
 LABEL description="Bos SARCat Acquisitions Scrapper"
