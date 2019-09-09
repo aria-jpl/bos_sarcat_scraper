@@ -35,9 +35,9 @@ def get_index_and_type():
         ipath = dataset[0].get("ipath")
         typ = ipath[ipath.rfind("/"):]
         version = dataset[0].get("version")
-        index = "grq_v{}_acquisition-bos_sarcat".format(version)
+        index = "grq_v{}_acquisition-sarcat".format(version)
     except:
-        index = "grq_{}_acquisition-bos_sarcat".format("v0.2")
+        index = "grq_v0.2_acquisition-sarcat"
         typ = "acquisition-BOS_SARCAT"
     return index, typ
 
