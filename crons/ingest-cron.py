@@ -41,13 +41,14 @@ def submit_scraper_job(job_type, tag, params):
 
     print('submitting jobs with param-s:')
     job_spec = '%s:%s' % (job_type, tag)
+    job_name = '%s-%s' % (job_type, tag)
     hysds_ios = {
         "id": "internal-temporary-wiring",
         "params": params,
         "job-specification": job_spec
     }
     print(json.dumps(params, sort_keys=True, indent=4, separators=(',', ': ')))
-    mozart_job_id = submit_mozart_job({}, rule, hysdsio=hysds_ios, job_name=job_spec, enable_dedup=False)
+    mozart_job_id = submit_mozart_job({}, rule, hysdsio=hysds_ios, job_name=job_name, enable_dedup=False)
 
     LOGGER.info("Job ID: " + mozart_job_id)
     print("Job ID: " + mozart_job_id)
@@ -116,6 +117,6 @@ if __name__ == '__main__':
     delta_days = args.days
     delta_hours = args.hours
     release_tag = args.tag
-    job_name = "job-bos_ingest"
-    submit_scrapper(job_name, release_tag, delta_days, delta_hours)
+    job = "job-bos_ingest"
+    submit_scrapper(job, release_tag, delta_days, delta_hours)
 
