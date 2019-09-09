@@ -160,8 +160,8 @@ def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets
                         LOGGER.info("Successfully ingested dataset {}".format(id))
                         shutil.rmtree(id)
                     except Exception as e:
-                        LOGGER.error("Exception: {}".format(e))
                         LOGGER.error("Failed to ingest dataset {}".format(id))
+                        LOGGER.error("Exception: {}".format(e))
                         failed_publish.append(id)
     return
 

@@ -1,7 +1,10 @@
 {
   "submission_type": "individual",
-  "component":"tosca",
+  "component": "tosca",
   "label": "Ingest acquisitions from Bos SARCAT",
+  "imported_worker_files": {
+    "/home/ops/verdi/etc/datasets.json": "/home/ops/verdi/etc/datasets.json"
+  },
   "allowed_accounts": [ "ops" ],
   "params" : [
     {
