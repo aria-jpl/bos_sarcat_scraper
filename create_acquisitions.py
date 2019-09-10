@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 from hysds.celery import app
+import hysds.orchestrator
 from hysds.dataset_ingest import ingest
 import json
 import copy
@@ -20,9 +21,9 @@ log_format = "[%(asctime)s: %(levelname)s/%(funcName)s] %(message)s"
 logging.basicConfig(format=log_format,level=logging.INFO)
 LOGGER = logging.getLogger("hysds")
 
-"""
-below are mappings created for metadata values
-"""
+
+'mappings created for metadata values'
+##################################################################
 DATASET_VERSION = "v2.0"
 DEFAULT_ACQ_TYPE = "NOMINAL"
 # the below are all templates being used
@@ -33,10 +34,7 @@ SCIHUB_DOWNLOAD_URL = "https://scihub.copernicus.eu/apihub/odata/v1/Products('$i
 ICON_URL = "https://scihub.copernicus.eu/apihub/odata/v1/Products('$id')/Products('Quicklook')/$value"
 failed_publish = list()
 
-
-PLATFORM_NAME = {
-    "S1": "Sentinel-1"
-}
+PLATFORM_NAME = { "S1": "Sentinel-1" }
 
 INSTRUMENT_NAME = {
     "Sentinel-1A": "Synthetic Aperture Radar (C-band)",
@@ -53,10 +51,7 @@ INSTRUMENT_SHORT_NAME = {
     "TanDEM-X-1": "TanDEM",
     "ALOS-2": "PALSAR-2"
 }
-
-"""
-End of mappings
-"""
+##################################################################
 
 
 def get_existing_acqs(start_time, end_time, location=False):
@@ -71,34 +66,34 @@ def get_existing_acqs(start_time, end_time, location=False):
     index = "grq_{}_acquisition-sarcat".format(DATASET_VERSION)
 
     query = {
-        "query": {
-            "filtered": {
-                "query": {
-                    "bool": {
-                        "must": [
-                            {
-                                "range": {
-                                    "metadata.sensingStart": {
-                                        "to": end_time,
-                                        "from": start_time
-                                    }
-                                }
-                            }
-                        ]
+      "query": {
+        "filtered": {
+          "query": {
+            "bool": {
+              "must": [
+                {
+                  "range": {
+                    "metadata.sensingStart": {
+                      "to": end_time,
+                      "from": start_time
                     }
+                  }
                 }
+              ]
             }
+          }
         }
+      }
     }
 
     if location:
         geo_shape = {
-                    "geo_shape": {
-                        "location": {
-                            "shape": location
-                        }
-                    }
-                }
+          "geo_shape": {
+            "location": {
+              "shape": location
+            }
+          }
+        }
         query["query"]["filtered"]["filter"] = geo_shape
 
     acq_ids = []
@@ -136,7 +131,8 @@ def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets
     :param endtime:
     :param ds_cfg: path to datasets.json
 
-    TO DO: Change the ingestion mechanism similar to Scihub acquisition ingest
+    TO DO: (somewhat done)
+           Change the ingestion mechanism similar to Scihub acquisition ingest
            Create a tmp dir and make dataset dir inside that
            After ingestion delete the tmp dir
 
@@ -150,19 +146,23 @@ def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets
     """
     existing = get_existing_acqs(starttime, endtime)
     """for every folder staring with `acquisition-` call ingest"""
-    for dir in os.listdir('.'):
+    acq_dirs = filter(lambda x: x.startswith('acquisition-'), os.listdir('.'))
+    for dir in acq_dirs:
         if os.path.isdir(dir):
-            id = dir
-            if id.startswith("acquisition-"):
-                if id not in existing:
-                    try:
-                        ingest(id, ds_cfg, app.conf.GRQ_UPDATE_URL, app.conf.DATASET_PROCESSED_QUEUE, dir, None)
-                        LOGGER.info("Successfully ingested dataset {}".format(id))
-                        shutil.rmtree(id)
-                    except Exception as e:
-                        LOGGER.error("Failed to ingest dataset {}".format(id))
-                        LOGGER.error("Exception: {}".format(e))
-                        failed_publish.append(id)
+            acq_id = dir
+            abspath_dir = os.path.abspath(acq_id)
+            if dir not in existing:
+                try:
+                    ingest(acq_id, ds_cfg, app.conf.GRQ_UPDATE_URL, app.conf.DATASET_PROCESSED_QUEUE, abspath_dir, None)
+                    LOGGER.info("Successfully ingested dataset {}".format(acq_id))
+                    shutil.rmtree(acq_id)
+                except Exception as e:
+                    LOGGER.error("Failed to ingest dataset {}".format(acq_id))
+                    LOGGER.error("Exception: {}".format(e))
+                    failed_publish.append(acq_id)
+            else:
+                LOGGER.info("acquisition found in existing, will delete directory: %s" % acq_id)
+                shutil.rmtree(acq_id)
     return
 
 
@@ -893,7 +893,6 @@ def main():
         # filter out the JSON response from other log messages in output
         start_pos = output.find("{")
         end_pos = output.rfind("}")
-        print(output)
         LOGGER.info(output)
         results = json.loads(output[start_pos:end_pos+1])
 
