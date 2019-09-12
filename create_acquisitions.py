@@ -32,7 +32,6 @@ DEFAULT_ACQ_TYPE = "NOMINAL"
 SCIHUB_URL_TEMPLATE = "https://scihub.copernicus.eu/apihub/odata/v1/Products('$id')/"
 SCIHUB_DOWNLOAD_URL = "https://scihub.copernicus.eu/apihub/odata/v1/Products('$id')/$value"
 ICON_URL = "https://scihub.copernicus.eu/apihub/odata/v1/Products('$id')/Products('Quicklook')/$value"
-failed_publish = list()
 
 PLATFORM_NAME = { "S1": "Sentinel-1" }
 
@@ -121,7 +120,7 @@ def get_existing_acqs(start_time, end_time, location=False):
     for item in hits:
         acq_ids.append(item.get("_id"))
 
-    return acq_ids
+    return set(acq_ids)
 
 
 def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets.json"):
@@ -144,9 +143,15 @@ def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets
            9d6e17c121b024e8f64eafbe86bba0d82df14202
     :return:
     """
+
     existing = get_existing_acqs(starttime, endtime)
-    """for every folder staring with `acquisition-` call ingest"""
+    'for every folder staring with `acquisition-` call ingest'
     acq_dirs = filter(lambda x: x.startswith('acquisition-'), os.listdir('.'))
+
+    total_ingested = 0
+    total_ingest_failed = 0
+    total_existing = 0
+    failed_publish = []
     for dir in acq_dirs:
         if os.path.isdir(dir):
             acq_id = dir
@@ -156,13 +161,22 @@ def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets
                     ingest(acq_id, ds_cfg, app.conf.GRQ_UPDATE_URL, app.conf.DATASET_PROCESSED_QUEUE, abspath_dir, None)
                     LOGGER.info("Successfully ingested dataset {}".format(acq_id))
                     shutil.rmtree(acq_id)
+                    total_ingested += 1
                 except Exception as e:
                     LOGGER.error("Failed to ingest dataset {}".format(acq_id))
                     LOGGER.error("Exception: {}".format(e))
                     failed_publish.append(acq_id)
+                    total_ingest_failed += 1
             else:
                 LOGGER.info("acquisition found in existing, will delete directory: %s" % acq_id)
                 shutil.rmtree(acq_id)
+                total_existing += 1
+    LOGGER.info('#' * 100)
+    LOGGER.info('total ingested: %i' % total_ingested)
+    LOGGER.info('total existing: %i' % total_existing)
+    LOGGER.info('total ingest failed: %i' % total_ingest_failed)
+    LOGGER.info('list of failed ingests: {}'.format(failed_publish))
+    LOGGER.info('#' * 100)
     return
 
 
@@ -845,46 +859,31 @@ def main():
         Read the inputs from _context.json and 
         create the positional arguments accordingly
         """
-        bos_ingest_last = None # ingestion time from BOS
-        from_time = None # start time
-        end_time = None # end time
+
+        'get values from _context.json and create the positional args for the call to bos_sarcat command line tool'
         get_cmd = "bos_sarcat_scraper"
-
-        # start and end times to find existing acquisitions in ES
-        starttime = None
-        endtime = None
-
-        """
-        Pull out values from _context.json and create the positional args
-        for the call to bos_sarcat command line tool
-        """
         context = open("_context.json", "r")
         ctx = json.loads(context.read())
 
-        # set starting time
-        if ctx.get("bos_ingest_time") is not None:
-            bos_ingest_last = ctx["bos_ingest_time"]
-        elif ctx.get("from_time") is not None:
-            from_time = ctx["from_time"]
-
-        if from_time is not None:
-            get_cmd += ' --fromTime ' + from_time
-            starttime = from_time
-        elif bos_ingest_last is not None:
-            get_cmd += " --fromBosIngestTime " + bos_ingest_last
-            starttime = bos_ingest_last
-
-        # set ending time
-        if ctx["end_time"] != "" and ctx["end_time"] is not None:
-            end_time = ctx["end_time"]
-
-        if end_time is not None:
-            get_cmd += " --toTime "+end_time
-            endtime = end_time
-        else:
+        if ctx.get('bos_ingest_time') != '' and ctx.get('bos_ingest_time') is not None:
+            # if we use bos_ingest_time then we can assume we dont need to use start_time and end_time
+            # starttime and endtime to find existing acquisitions in ES
+            bos_ingest_last = starttime = ctx["bos_ingest_time"]
+            get_cmd += ' --fromBosIngestTime ' + bos_ingest_last
             endtime = "{}Z".format(datetime.now().isoformat())
+        else:
+            # we'll assume to use start_time and end_time if we dont use bis_ingest_time
+            # starttime and endtime to find existing acquisitions in ES
+            from_time = starttime = ctx['from_time']
+            end_time = endtime = ctx['end_time']
+            get_cmd += ' --fromTime ' + from_time
+            get_cmd += ' --toTime ' + end_time
 
         get_cmd += " --sortBy bos_ingest --sort des" # by default asking for results to be sorted in descending order
+        LOGGER.info('#' * 100)
+        LOGGER.info('bos_sarcat_scraper command:')
+        LOGGER.info(get_cmd)
+        LOGGER.info('#' * 100)
 
         # call the bos commandline tool
         p = subprocess.Popen(get_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
@@ -896,9 +895,7 @@ def main():
         LOGGER.info(output)
         results = json.loads(output[start_pos:end_pos+1])
 
-        """
-        Iterate through the acquisitions to create and ingest them.
-        """
+        "Iterate through the acquisitions to create and ingest them."
         LOGGER.info("Number of acquisitions: %s" % results["totalFeatures"])
         if int(results["totalFeatures"]) != 0:
             for result in results["features"]:
@@ -910,9 +907,7 @@ def main():
             LOGGER.info("No new SAR acquisitions since last scrape.")
             return
     except Exception as e:
-        """
-        Pipe out exceptions to error and traceback file so it's visible on Figaro
-        """
+        "Pipe out exceptions to error and traceback file so it's visible on Figaro"
         with open('_alt_error.txt', 'a') as f:
             f.write("%s\n" % str(e))
         with open('_alt_traceback.txt', 'a') as f:

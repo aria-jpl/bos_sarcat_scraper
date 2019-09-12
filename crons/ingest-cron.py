@@ -7,7 +7,7 @@ import json
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger("hysds")
 
-CRAWLER_QUEUE = "factotum-job_worker-small"
+CRAWLER_QUEUE = "factotum-job_worker-large"
 
 
 def get_from_ingest_time(days_delta, hours_delta):
@@ -78,7 +78,7 @@ def construct_params(days_delta, hours_delta):
             "from": "value",
             "value": ""
         }
-        ]
+    ]
     print(json.dumps(params))
     return params
 
@@ -119,4 +119,3 @@ if __name__ == '__main__':
     release_tag = args.tag
     job = "job-bos_ingest"
     submit_scrapper(job, release_tag, delta_days, delta_hours)
-
