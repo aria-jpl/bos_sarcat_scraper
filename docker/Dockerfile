@@ -12,8 +12,8 @@ RUN set -ex \
  && sudo chown -R ops:ops /home/ops/verdi/ops/bos_sarcat_scraper
 
 RUN cd /home/ops/verdi/ops/bos_sarcat_scraper \
- && sudo pip install -e . \
- && sudo pip install elasticsearch
+ && pip install -e . \
+ && pip install elasticsearch
 
 WORKDIR /home/ops
 CMD ["/bin/bash", "--login"]
