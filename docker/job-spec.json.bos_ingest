@@ -6,8 +6,8 @@
     "/home/ops/verdi/etc/datasets.json": "/home/ops/verdi/etc/datasets.json",
   },
   "disk_usage": "10GB",
-  "soft_time_limit": "86400",
-  "time_limit": "86700",
+  "soft_time_limit": 86400,
+  "time_limit": 86700,
   "params": [
     {
       "name": "bos_ingest_time",
