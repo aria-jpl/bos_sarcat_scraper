@@ -5,6 +5,8 @@ LABEL description="Bos SARCat Acquisitions Scraper"
 
 USER ops
 
+RUN source ~/.bash_profile
+
 # copy packages
 COPY . /home/ops/verdi/ops/bos_sarcat_scraper
 RUN set -ex \
