@@ -2,5 +2,7 @@
   "required_queues":["factotum-job_worker-small"],
   "command":"/home/ops/verdi/ops/bos_sarcat_scraper/scrub_acquisitions.sh",
   "disk_usage":"1GB",
+  "soft_time_limit": "86400",
+  "time_limit": "86700",
   "params" : [ ]
 }

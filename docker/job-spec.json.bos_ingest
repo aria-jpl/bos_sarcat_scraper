@@ -3,9 +3,11 @@
   "container": "container-aria-jpl_bos_sarcat_scraper:master",
   "command": "/home/ops/verdi/ops/bos_sarcat_scraper/create_acquisitions.sh",
   "imported_worker_files": {
-    "/home/ops/verdi/etc/datasets.json": "/home/ops/verdi/etc/datasets.json"
+    "/home/ops/verdi/etc/datasets.json": "/home/ops/verdi/etc/datasets.json",
   },
-  "disk_usage": "1GB",
+  "disk_usage": "10GB",
+  "soft_time_limit": "86400",
+  "time_limit": "86700",
   "params": [
     {
       "name": "bos_ingest_time",
