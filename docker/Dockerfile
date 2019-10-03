@@ -5,15 +5,12 @@ LABEL description="Bos SARCat Acquisitions Scraper"
 
 USER ops
 
-RUN source ~/.bash_profile
-
 # copy packages
 COPY . /home/ops/verdi/ops/bos_sarcat_scraper
 RUN set -ex \
  && source /home/ops/verdi/bin/activate \
- && sudo chown -R ops:ops /home/ops/verdi/ops/bos_sarcat_scraper
-
-RUN cd /home/ops/verdi/ops/bos_sarcat_scraper \
+ && sudo chown -R ops:ops /home/ops/verdi/ops/bos_sarcat_scraper \
+ && cd /home/ops/verdi/ops/bos_sarcat_scraper \
  && pip install -e . \
  && pip install elasticsearch
 
