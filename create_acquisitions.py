@@ -716,7 +716,7 @@ def make_met_file(product_name, record):
             LOGGER.info("Keeping existing dataset. Expect to see exception message.")
     try:
         LOGGER.info("Creating Dataset for {}".format(folder_name))
-        os.makedirs(folder_name, 0755)
+        os.makedirs(folder_name, 0o777)
         met_file = open("%s/%s.met.json" % (folder_name, dataset_name), 'w')
         met_file.write(json.dumps(metadata))
         met_file.close()
@@ -813,7 +813,7 @@ def make_predicted_datasets(record):
 
         try:
             LOGGER.info("Creating Dataset for {}".format(folder_name))
-            os.makedirs(folder_name, 0755)
+            os.makedirs(folder_name, 0o777)
             met_file = open("%s/%s.met.json" % (folder_name, dataset_name), 'w')
             met_file.write(json.dumps(metadata))
             met_file.close()
