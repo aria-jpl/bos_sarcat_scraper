@@ -1,3 +1,4 @@
+from builtins import str
 import requests
 import logging
 import json
@@ -7,7 +8,8 @@ from string import Template
 from shapely.geometry import shape
 import geojson
 
-#Setup logger for this job here.  Should log to STDOUT or STDERR as this is a job
+
+# Setup logger for this job here.  Should log to STDOUT or STDERR as this is a job
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger("hysds")
 logging.getLogger("requests").setLevel(logging.ERROR)
@@ -33,15 +35,16 @@ param_mapping = {"fromTime":
                       "param_operator":"="},
                  }
 
+
 def get_wkt(geojson_polygon):
     g1 = geojson.loads(json.dumps(geojson_polygon))
     g2 = shape(g1)
     return g2.wkt
 
+
 def make_api_call(parameters):
     geo_server_url = "http://portal.bostechnologies.com:8080/geoserver/bos/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=bos:sarcat&outputFormat=application%2Fjson"
 
-    #print parameters
     if parameters != {}:
         url = geo_server_url
         cql_filter = "&CQL_FILTER="
@@ -75,7 +78,6 @@ def make_api_call(parameters):
 
     print("making request with url : %s" % url)
     LOGGER.info("making request with url : %s" % url)
-
 
     r = requests.get(url)
     if r.status_code == requests.codes.ok:

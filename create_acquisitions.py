@@ -1,3 +1,5 @@
+from builtins import str
+from builtins import range
 import logging
 import os
 import shutil
@@ -146,7 +148,7 @@ def ingest_acq_dataset(starttime, endtime, ds_cfg ="/home/ops/verdi/etc/datasets
 
     existing = get_existing_acqs(starttime, endtime)
     'for every folder staring with `acquisition-` call ingest'
-    acq_dirs = filter(lambda x: x.startswith('acquisition-'), os.listdir('.'))
+    acq_dirs = [x for x in os.listdir('.') if x.startswith('acquisition-')]
 
     total_ingested = 0
     total_ingest_failed = 0

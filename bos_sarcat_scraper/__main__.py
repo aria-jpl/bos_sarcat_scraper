@@ -1,6 +1,9 @@
+from __future__ import absolute_import
+from builtins import str
+from builtins import input
 import sys
 import argparse
-import bosart_scrape
+from . import bosart_scrape
 import datetime
 import json
 
@@ -16,9 +19,11 @@ def valid_date(s):
         msg = "Not a valid date: '{0}'.".format(s)
         raise argparse.ArgumentTypeError(msg)
 
+
 def geojson(spatial_extent):
     if type(json.loads(spatial_extent)) is dict:
         return spatial_extent
+
 
 def sort_field(s_f):
     if s_f == "start_time" or s_f == "stop_time" or s_f == "bos_ingest":
@@ -26,28 +31,31 @@ def sort_field(s_f):
     else:
         raise argparse.ArgumentError("The value for sortBy should be either start_time, stop_time or bos_ingest not %s."%s_f)
 
+
 def sort_order(order):
     if order == "asc" or order == "des":
         return order
     else:
         raise argparse.ArgumentError("The value for sort should be either asc or des not %s,"%order)
 
+
 def check_inputs(args):
     yes = "y"
     no = "n"
     if not args.fromTime and not args.fromBosIngestTime:
         print ("You have NOT specified any start time using --fromTime, -from or --fromBosIngestTime. \nYou are asking to find all acquisitions from the beginning of time! \nThis query will take a very long time.\nTHIS IS NOT RECOMMENDED.")
-        resp = str(raw_input('Are you sure you want to proceed? (y/n):'))
+        resp = str(eval(input('Are you sure you want to proceed? (y/n):')))
         if resp.lower() == yes.lower():
-            print "Okay! Please wait..."
+            print("Okay! Please wait...")
             return True
         elif resp.lower() == no.lower():
-            print "Please try again with the start time specified using --fromTime, -from or --fromBosIngestTime."
+            print("Please try again with the start time specified using --fromTime, -from or --fromBosIngestTime.")
             exit()
         else:
             print("Please specify y/n\n")
             return False
     return True
+
 
 def main():
     parser = argparse.ArgumentParser(description='Query BOS SarCat for acquisitions.')
@@ -79,7 +87,7 @@ def main():
     if args.sort:
         params["sort"] = args.sort
 
-    print bosart_scrape.make_api_call(parameters=params)
+    print(bosart_scrape.make_api_call(parameters=params))
 
 
 if __name__ == '__main__':

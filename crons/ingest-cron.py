@@ -102,7 +102,6 @@ if __name__ == '__main__':
     '''
     Main program that is run by cron to submit a scraper job
     '''
-
     parser = argparse.ArgumentParser(description=__doc__)
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--days", help="Delta in days", nargs='?',
