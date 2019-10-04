@@ -64,7 +64,7 @@ def get_existing_acqs(start_time, end_time, location=False):
     :param end_time:
     :return:
     """
-    index = "grq_{}_acquisition-sarcat".format(DATASET_VERSION)
+    index = "grq_{}_acquisition-bos_sarcat".format(DATASET_VERSION)
 
     query = {
       "query": {
