@@ -20,13 +20,14 @@ def submit_scrubber_job(params):
     print('submitting jobs with params:')
     print(json.dumps(params, sort_keys=True, indent=4, separators=(',', ': ')))
     mozart_job_id = submit_mozart_job({}, rule, hysdsio={"id": "internal-temporary-wiring", "params": params,
-                                                         "job-specification": "job-scrub_outdated_bos_acqs:master"},
-                                      job_name='job_%s-%s' % ('scrub_outdated_bos_acqs', "master"),
+                                                         "job-specification": "job-scrub_outdated_bos_acqs:develop"},
+                                      job_name='job_%s-%s' % ('scrub_outdated_bos_acqs', "develop"),
                                       enable_dedup=False)
 
     LOGGER.info("Job ID: " + mozart_job_id)
     print("Job ID: " + mozart_job_id)
     return
+
 
 def submit_scrapper():
     params = []
