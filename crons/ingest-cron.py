@@ -7,7 +7,7 @@ import json
 logging.basicConfig(level=logging.DEBUG)
 LOGGER = logging.getLogger("hysds")
 
-CRAWLER_QUEUE = "factotum-job_worker-large"
+CRAWLER_QUEUE = "factotum-job_worker-small"
 
 
 def get_from_ingest_time(days_delta, hours_delta):
