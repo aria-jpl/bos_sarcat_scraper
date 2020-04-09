@@ -2,7 +2,7 @@
   "required_queues": ["factotum-job_worker-small"],
   "command": "/home/ops/verdi/ops/bos_sarcat_scraper/create_acquisitions.sh",
   "imported_worker_files": {
-    "/home/ops/verdi/etc/datasets.json": "/home/ops/verdi/etc/datasets.json"
+    "/export/home/hysdsops/verdi/etc/datasets.json": "/home/ops/verdi/etc/datasets.json"
   },
   "disk_usage": "10GB",
   "soft_time_limit": 86400,
